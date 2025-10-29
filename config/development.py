@@ -15,6 +15,9 @@ class DevelopmentConfig(BaseConfig):
         'DEV_DATABASE_URL',
         # f'sqlite:///{os.path.join(basedir, 'app.db')}'
         f'sqlite:///app.db'
+        # "mysql+pymysql://root:MkHvotVOKvHijvUowSITOmBCkiQBxEtL@crossover.proxy.rlwy.net:13598/railway"
+        # "mysql+pymysql://root:MkHvotVOKvHijvUowSITOmBCkiQBxEtL@crossover.proxy.rlwy.net:13598/railway?auth_plugin=mysql_native_password"
+        # "mysql+pymysql://root:ZNdoBekJXTpEbGiECqaPvnNyyGLSvfEu@crossover.proxy.rlwy.net:13598/railway"
     )
 
     # 开发环境特殊配置

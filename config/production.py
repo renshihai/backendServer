@@ -12,7 +12,8 @@ class ProductionConfig(BaseConfig):
     # 生产环境数据库 - 使用MySQL/PostgreSQL
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         'DATABASE_URL',
-        'mysql+pymysql://user:password@localhost/tracking_prod'
+        # 'mysql+pymysql://user:password@localhost/tracking_prod'
+        'mysql://root:MkHvotVOKvHijvUowSITOmBCkiQBxEtL@crossover.proxy.rlwy.net:13598/railway'
     )
 
     # 生产环境安全配置

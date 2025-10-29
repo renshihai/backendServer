@@ -1,6 +1,8 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
+import pymysql
 import logging
 import os
 import sys
@@ -12,7 +14,30 @@ sys.path.append(project_root)
 
 db = SQLAlchemy()
 migrate = Migrate()
+jwt = JWTManager()
 
+# from sqlalchemy import create_engine
+#
+# # 你的数据库连接 URL（已添加 auth_plugin 参数）
+# DATABASE_URL = "mysql+pymysql://root:ZNdoBekJXTpEbGiECqaPvnNyyGLSvfEu@crossover.proxy.rlwy.net:13598/railway"
+#
+# # 明确指定 TCP 协议，同时可补充超时参数增强稳定性
+# engine = create_engine(
+#     DATABASE_URL,
+#     connect_args={
+#         "protocol": "tcp",  # 显式指定 TCP 协议（默认已为 TCP，可选但可明确）
+#         "connect_timeout": 30,  # 延长连接超时时间（避免网络延迟导致失败）
+#         "read_timeout": 60,  # 读取超时时间（防止查询过程中连接中断）
+#     }
+# )
+
+# try:
+#     # 尝试连接数据库
+#     with engine.connect() as conn:
+#         result = conn.execute("SELECT 1")
+#         print("连接成功！", result.scalar())  # 输出 1 表示连接正常
+# except Exception as e:
+#     print("连接失败：", str(e))
 
 def create_app(config_name=None):
     """应用工厂函数"""
@@ -49,6 +74,7 @@ def create_app(config_name=None):
     # 初始化扩展
     db.init_app(app)
     migrate.init_app(app, db)
+    jwt.init_app(app)
 
     # 注册蓝图
     from app.routes import main_bp

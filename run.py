@@ -5,7 +5,7 @@ from app import create_app
 # 设置开发环境
 os.environ['FLASK_CONFIG'] = 'development'
 os.environ['FLASK_DEBUG'] = '1'
-if True:
+if False:
     # 设置生产环境
     os.environ['FLASK_CONFIG'] = 'production'
     os.environ['FLASK_DEBUG'] = '0'
