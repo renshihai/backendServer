@@ -10,9 +10,9 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), unique=True, nullable=False, index=True)
     email = db.Column(db.String(120), unique=True, nullable=False, index=True)
-    password_hash = db.Column(db.String(128))
-    created_at = db.Column(db.DateTime, default=datetime.now())
-    updated_at = db.Column(db.DateTime, default=datetime.now(), onupdate=datetime.now())
+    password_hash = db.Column(db.String(256))
+    created_at = db.Column(db.DateTime, default=datetime.now)
+    updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
 
     # 关联关系：一个用户可以有多个事件
     events = db.relationship('Event', backref='user', lazy='dynamic', cascade='all, delete-orphan')
@@ -44,7 +44,7 @@ class Event(db.Model):
     event_metadata = db.Column(db.Text)  # 额外数据，存储为JSON格式
     ip_address = db.Column(db.String(45))  # IP地址
     user_agent = db.Column(db.Text)  # 用户代理
-    created_at = db.Column(db.DateTime, default=datetime.now(), index=True)
+    created_at = db.Column(db.DateTime, default=datetime.now, index=True)
 
     def to_dict(self):
         """将事件对象转换为字典"""

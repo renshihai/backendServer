@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 from flask import Blueprint, request, jsonify, render_template
 from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity
 from app import db
@@ -56,6 +56,8 @@ def register():
         if User.query.filter_by(email=data['email']).first():
             return jsonify({'error': '邮箱已存在'}), 400
 
+        print('register: 11')
+
         # 创建新用户
         user = User(
             username=data['username'],
@@ -63,8 +65,10 @@ def register():
             password_hash=hash_password(data['password'])
         )
 
+        print('register: 22')
         db.session.add(user)
         db.session.commit()
+        print('register: 33')
 
         # 创建访问令牌
         access_token = create_access_token(identity=str(user.id))
@@ -77,8 +81,10 @@ def register():
 
     except Exception as e:
         db.session.rollback()
+        print(f"数据库错误详情: {str(e)}")  # 打印详细错误
+        import traceback
+        traceback.print_exc()  # 打印完整的堆栈跟踪
         return jsonify({'error': '服务器内部错误', 'details': str(e)}), 500
-
 
 @main_bp.route('/api/login', methods=['POST'])
 def login():
