@@ -1,7 +1,7 @@
 __pycache__/
 venv/
-instance/
+#instance/
 .idea/
 *.pyc
-.env
-*.db
+#.env
+#*.db
