@@ -7,6 +7,10 @@ import logging
 import os
 import sys
 
+# MySQL驱动注册
+pymysql.install_as_MySQLdb()
+
+
 # 不添加下面的代码的化，在虚拟环境下运行start_dev.bat 找不到 模块 config
 # 将项目根目录添加到 Python 路径（关键！）
 project_root = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
@@ -15,29 +19,6 @@ sys.path.append(project_root)
 db = SQLAlchemy()
 migrate = Migrate()
 jwt = JWTManager()
-
-# from sqlalchemy import create_engine
-#
-# # 你的数据库连接 URL（已添加 auth_plugin 参数）
-# DATABASE_URL = "mysql+pymysql://root:ZNdoBekJXTpEbGiECqaPvnNyyGLSvfEu@crossover.proxy.rlwy.net:13598/railway"
-#
-# # 明确指定 TCP 协议，同时可补充超时参数增强稳定性
-# engine = create_engine(
-#     DATABASE_URL,
-#     connect_args={
-#         "protocol": "tcp",  # 显式指定 TCP 协议（默认已为 TCP，可选但可明确）
-#         "connect_timeout": 30,  # 延长连接超时时间（避免网络延迟导致失败）
-#         "read_timeout": 60,  # 读取超时时间（防止查询过程中连接中断）
-#     }
-# )
-
-# try:
-#     # 尝试连接数据库
-#     with engine.connect() as conn:
-#         result = conn.execute("SELECT 1")
-#         print("连接成功！", result.scalar())  # 输出 1 表示连接正常
-# except Exception as e:
-#     print("连接失败：", str(e))
 
 def create_app(config_name=None):
     """应用工厂函数"""
@@ -88,6 +69,8 @@ def create_app(config_name=None):
     # 开发环境特殊处理
     if app.config['DEBUG']:
         setup_development_environment(app)
+    else:
+        setup_production_environment(app)
 
     return app
 
@@ -100,9 +83,14 @@ def setup_logging(app):
             format=app.config['LOG_FORMAT']
         )
     else:
+        # 生产环境日志到文件
         logging.basicConfig(
             level=getattr(logging, app.config['LOG_LEVEL']),
-            format=app.config['LOG_FORMAT']
+            format=app.config['LOG_FORMAT'],
+            handlers=[
+                logging.FileHandler('app.log'),
+                logging.StreamHandler()
+            ]
         )
 
 
@@ -110,8 +98,12 @@ def setup_development_environment(app):
     """开发环境特殊设置"""
     # 自动创建数据库表
     with app.app_context():
-        from app import models
-        db.create_all()
+        try:
+            from app import models
+            db.create_all()
+            print("开发环境数据库表创建完成")
+        except Exception as e:
+            print(f"数据库表创建错误: {e}")
 
     # 开发环境添加调试工具
     try:
@@ -120,3 +112,19 @@ def setup_development_environment(app):
         toolbar.init_app(app)
     except ImportError:
         pass
+
+def setup_production_environment(app):
+    """生产环境特殊设置"""
+    # 生产环境安全检查
+    if app.config['SECRET_KEY'] == 'your-dev-secret-key-change-this':
+        raise ValueError("生产环境必须设置强密钥")
+
+    # 生产环境数据库迁移检查
+    with app.app_context():
+        try:
+            # 检查数据库连接
+            db.session.execute('SELECT 1')
+            print("生产环境数据库连接正常")
+        except Exception as e:
+            print(f"生产环境数据库连接失败: {e}")
+            raise

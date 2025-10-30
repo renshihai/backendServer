@@ -1,9 +1,16 @@
 import os
 from datetime import timedelta
+from dotenv import load_dotenv
 
+# 加载环境变量
+# load_dotenv()
 
 class BaseConfig:
     """基础配置"""
+
+    env_file = '.env.production' if os.environ.get('FLASK_CONFIG') == 'production' else '.env'
+    load_dotenv(env_file)
+
     # 安全配置
     SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
 

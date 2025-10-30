@@ -13,10 +13,14 @@ class ProductionConfig(BaseConfig):
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         'DATABASE_URL',
         # 'mysql+pymysql://user:password@localhost/tracking_prod'
-        'mysql://root:MkHvotVOKvHijvUowSITOmBCkiQBxEtL@crossover.proxy.rlwy.net:13598/railway'
+        # 'mysql://root:MkHvotVOKvHijvUowSITOmBCkiQBxEtL@crossover.proxy.rlwy.net:13598/railway'
+        'mysql+pymysql://root:password@localhost/tracking_prod'
     )
 
     # 生产环境安全配置
+    # SECRET_KEY='your-super-secret-key-change-this-in-production'
+    # JWT_SECRET_KEY='your-jwt-secret-key-change-this-too'
+
     SECRET_KEY = os.environ.get('SECRET_KEY')
     if not SECRET_KEY:
         raise ValueError("生产环境必须设置SECRET_KEY环境变量")
@@ -39,3 +43,6 @@ class ProductionConfig(BaseConfig):
 
     # 生产环境性能配置
     JSONIFY_PRETTYPRINT_REGULAR = False  # 禁用美化输出提高性能
+
+    # 生产环境安全头部
+    SECURITY_HEADERS = True

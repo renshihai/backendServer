@@ -257,6 +257,7 @@ def events_page():
     return render_template('events.html')
 
 @main_bp.route('/login')
+@main_bp.route('/')
 def login_page():
     """登录页面"""
     return render_template('login.html')  # 你需要创建这个页面
