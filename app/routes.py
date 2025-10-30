@@ -32,6 +32,7 @@ def register():
     try:
         data = request.get_json()
 
+        print('user info: ', data)
         # 验证必要字段
         required_fields = ['username', 'email', 'password']
         for field in required_fields:

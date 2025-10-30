@@ -14,12 +14,13 @@ class DevelopmentConfig(BaseConfig):
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         'DEV_DATABASE_URL',
         # f'sqlite:///{os.path.join(basedir, 'app.db')}'
-        'sqlite:///app.db'
-        # "mysql+pymysql://root:password@localhost/tracking_dev"
+        # 'sqlite:///app.db'
+        "mysql+pymysql://root:0210blF!@localhost/tracking_dev"
         # mysql+pymysql://用户名:密码@主机:端口/数据库名
         # "mysql+pymysql://root:ZNdoBekJXTpEbGiECqaPvnNyyGLSvfEu@crossover.proxy.rlwy.net:13598/railway"
     )
-
+    # DATABASE_URL = "mysql+pymysql://root:0210blF!@localhost/behavior_db"
+    print("当前db: ", SQLALCHEMY_DATABASE_URI)
     # 开发环境特殊配置
     TRACKING_BUFFER_SIZE = 50  # 开发环境减小缓冲
     LOG_LEVEL = 'DEBUG'  # 开发环境更详细的日志
